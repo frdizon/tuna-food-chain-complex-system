@@ -487,7 +487,7 @@ MONITOR
 603
 234
 648
-tuna death by age
+tuna death by age count
 tuna-death-by-age-count
 17
 1
@@ -498,7 +498,7 @@ MONITOR
 653
 234
 698
-tuna death by starvation
+tuna death by starvation count
 tuna-death-by-starvation-count
 17
 1
@@ -509,7 +509,7 @@ MONITOR
 603
 477
 648
-anchovies death by age
+anchovies death by age count
 anchovy-death-by-age-count
 17
 1
@@ -520,7 +520,7 @@ MONITOR
 654
 477
 699
-anchovies death by starvation
+anchovies death by starvation count
 anchovy-death-by-starvation-count
 17
 1

@@ -487,7 +487,7 @@ MONITOR
 603
 234
 648
-tuna death by age
+tuna death by age count
 tuna-death-by-age-count
 17
 1
@@ -498,7 +498,7 @@ MONITOR
 653
 234
 698
-tuna death by starvation
+tuna death by starvation count
 tuna-death-by-starvation-count
 17
 1
@@ -509,7 +509,7 @@ MONITOR
 603
 477
 648
-anchovies death by age
+anchovies death by age count
 anchovy-death-by-age-count
 17
 1
@@ -520,7 +520,7 @@ MONITOR
 654
 477
 699
-anchovies death by starvation
+anchovies death by starvation count
 anchovy-death-by-starvation-count
 17
 1
@@ -569,7 +569,7 @@ initial-<fishtype>-count: initial count of the species at the start of the simul
 
 <fishtype>-reproduction-cost: once a fish sucessfully reproduced, it will consume this amount of cost on its energy.
 
-<fishtype>-maximum-age: maximum age (ticks) a fish can live. Note that at the start of the simulation, a random age is given to the fish (Not implementing randomness at the start causes mass deaths , therefore an imbalance that causes extinction).
+<fishtype>-maximum-age: maximum age (ticks) a fish can live. Note that at the start of the simulation, a random age is given to the fish (Not implementing randomness at the start causes mass deaths by dying at the same time, therefore an imbalance that causes extinction).
 
 NOTE: <fishtype> refers to tuna or ancovy.
 
