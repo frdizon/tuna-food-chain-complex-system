@@ -1,4 +1,11 @@
-turtles-own [energy]
+globals [
+  tuna-death-by-age-count
+  tuna-death-by-starvation-count
+  anchovy-death-by-age-count
+  anchovy-death-by-starvation-count
+  anchovy-death-by-being-eaten-count
+]
+turtles-own [energy age]
 patches-own [interval]
 
 breed [ tunas tuna ]
@@ -7,6 +14,7 @@ breed [ anchovies anchovy ]
 to setup
   clear-all
   reset-ticks
+  setup-global-counts
   setup-patches
   create-tunas initial-tuna-count
   [
@@ -15,6 +23,7 @@ to setup
     set size 2
     set energy tuna-initial-energy
     setxy random-xcor random-ycor
+    set age random tuna-maximum-age
   ]
   create-anchovies initial-anchovy-count
   [
@@ -23,6 +32,7 @@ to setup
     set size 1
     set energy anchovy-initial-energy
     setxy random-xcor random-ycor
+    set age random anchovy-maximum-age
   ]
 end
 
@@ -38,7 +48,8 @@ to tuna-bahaviour
   [
     swim
     eat-anchovy
-    death-by-starvation
+    tuna-death-by-starvation
+    tuna-death-by-age
     reproduce-tuna
   ]
 end
@@ -48,7 +59,8 @@ to anchovy-bahaviour
   [
     swim
     eat-algae
-    death-by-starvation
+    anchovy-death-by-starvation
+    anchovy-death-by-age
     reproduce-anchovy
   ]
 end
@@ -79,25 +91,58 @@ to eat-anchovy
   if prey != nobody  [
     ask prey [ die ]
     set energy energy + tuna-energy-from-food
+    set anchovy-death-by-being-eaten-count anchovy-death-by-being-eaten-count + 1
   ]
 end
 
 to reproduce-tuna  ; sheep procedure
   if energy >= tuna-energy-need-to-reproduce [
     set energy energy - tuna-reproduction-cost
-    hatch 1 [ rt random-float 360 fd 1 set energy tuna-initial-energy ]
+    hatch 1 [
+      rt random-float 360 fd 1
+      set energy tuna-initial-energy
+      set age 0
+    ]
   ]
 end
 
 to reproduce-anchovy
   if energy >= anchovy-energy-need-to-reproduce [
     set energy energy - anchovy-reproduction-cost
-    hatch 1 [ rt random-float 360 fd 1 set energy anchovy-initial-energy ]
+    hatch 1 [
+      rt random-float 360 fd 1
+      set energy anchovy-initial-energy
+      set age 0
+    ]
   ]
 end
 
-to death-by-starvation
-  if energy < 0 [ die ]
+to tuna-death-by-starvation
+  if energy < 0 [
+    set tuna-death-by-starvation-count tuna-death-by-starvation-count + 1
+    die
+  ]
+end
+
+to tuna-death-by-age
+  ifelse age > tuna-maximum-age [
+    set tuna-death-by-age-count tuna-death-by-age-count + 1
+    die
+  ][ set age age + 1]
+end
+
+to anchovy-death-by-starvation
+  if energy < 0 [
+    set anchovy-death-by-starvation-count anchovy-death-by-starvation-count + 1
+    die
+  ]
+end
+
+to anchovy-death-by-age
+  ifelse age > anchovy-maximum-age [
+    set anchovy-death-by-age-count anchovy-death-by-age-count + 1
+    die
+  ][ set age age + 1]
 end
 
 to grow-algae
@@ -119,15 +164,23 @@ to setup-patches
       [ set interval random algae-reproduction-interval ]
     ]
 end
+
+to setup-global-counts
+  set tuna-death-by-age-count 0
+  set tuna-death-by-starvation-count 0
+  set anchovy-death-by-age-count 0
+  set anchovy-death-by-starvation-count 0
+  set anchovy-death-by-being-eaten-count 0
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-518
-25
-1138
-646
+501
+21
+1233
+754
 -1
 -1
-18.55
+21.94
 1
 10
 1
@@ -148,10 +201,10 @@ ticks
 30.0
 
 BUTTON
-42
-30
-105
-63
+19
+23
+244
+56
 NIL
 setup
 NIL
@@ -165,10 +218,10 @@ NIL
 1
 
 BUTTON
-113
-31
-176
-64
+252
+23
+475
+56
 NIL
 go
 T
@@ -182,10 +235,10 @@ NIL
 1
 
 SLIDER
-40
-161
-244
-194
+19
+117
+223
+150
 initial-tuna-count
 initial-tuna-count
 0
@@ -197,10 +250,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-283
-163
-492
-196
+261
+116
+475
+149
 initial-anchovy-count
 initial-anchovy-count
 0
@@ -212,10 +265,10 @@ NIL
 HORIZONTAL
 
 PLOT
-29
-493
-497
-643
+19
+445
+478
+595
 Species count
 NIL
 NIL
@@ -232,10 +285,10 @@ PENS
 "algae count / 4" 1.0 0 -13840069 true "" "plot count patches with [pcolor = green]"
 
 SLIDER
-39
-206
-244
-239
+18
+162
+223
+195
 tuna-initial-energy
 tuna-initial-energy
 0
@@ -247,10 +300,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-40
-251
-244
-284
+19
+207
+223
+240
 tuna-energy-from-food
 tuna-energy-from-food
 0
@@ -262,10 +315,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-282
-211
-492
-244
+262
+164
+475
+197
 anchovy-initial-energy
 anchovy-initial-energy
 0
@@ -277,10 +330,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-281
-255
-491
-288
+263
+208
+474
+241
 anchovy-energy-from-food
 anchovy-energy-from-food
 0
@@ -292,10 +345,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-39
-87
-493
-120
+19
+69
+475
+102
 algae-reproduction-interval
 algae-reproduction-interval
 0
@@ -307,10 +360,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-39
-298
-246
-331
+18
+254
+225
+287
 tuna-energy-need-to-reproduce
 tuna-energy-need-to-reproduce
 0
@@ -322,10 +375,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-280
-300
-494
-333
+263
+253
+476
+286
 anchovy-energy-need-to-reproduce
 anchovy-energy-need-to-reproduce
 0
@@ -337,10 +390,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-37
-343
-247
-376
+18
+299
+226
+332
 tuna-reproduction-cost
 tuna-reproduction-cost
 0
@@ -352,10 +405,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-279
-344
-494
-377
+262
+297
+477
+330
 anchovy-reproduction-cost
 anchovy-reproduction-cost
 0
@@ -367,10 +420,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-28
-438
-123
-483
+19
+390
+114
+435
 tuna count
 count tunas
 17
@@ -378,10 +431,10 @@ count tunas
 11
 
 MONITOR
-133
-438
-228
-483
+124
+390
+219
+435
 anchovy count
 count anchovies
 17
@@ -389,12 +442,97 @@ count anchovies
 11
 
 MONITOR
-370
-441
-497
-486
+351
+393
+478
+438
 algae count
 count patches with [pcolor = green]
+17
+1
+11
+
+SLIDER
+18
+343
+227
+376
+tuna-maximum-age
+tuna-maximum-age
+0
+800
+400.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+262
+343
+477
+376
+anchovy-maximum-age
+anchovy-maximum-age
+0
+800
+150.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+20
+603
+234
+648
+tuna death by age
+tuna-death-by-age-count
+17
+1
+11
+
+MONITOR
+20
+653
+234
+698
+tuna death by starvation
+tuna-death-by-starvation-count
+17
+1
+11
+
+MONITOR
+263
+603
+477
+648
+anchovies death by age
+anchovy-death-by-age-count
+17
+1
+11
+
+MONITOR
+263
+654
+477
+699
+anchovies death by starvation
+anchovy-death-by-starvation-count
+17
+1
+11
+
+MONITOR
+263
+707
+477
+752
+anchovies death by being eaten count
+anchovy-death-by-being-eaten-count
 17
 1
 11
@@ -406,7 +544,7 @@ This model simulates the ecosystem of tuna's foodchain, where tunas eat smaller 
 
 ## HOW IT WORKS
 
-As stated earlier, this model sumulates a foodchain where a tuna eats a smaller fish known as anchovies, and anchovies eat algaes. Since both tunas and anchovies are a type of fish, they both have a similar behaviour where both can swim to move around, both can reproduce an offset of the same species, both can die from starvation, both does eat but they differ on what food to eat.
+As stated earlier, this model sumulates a foodchain where a tuna eats a smaller fish known as anchovies, and anchovies eat algaes. Since both tunas and anchovies are a type of fish, they both have a similar behaviour where both can swim to move around, both can reproduce an offset of the same species, both can die from starvation or reaching its maximum age, both does eat but they differ on what food to eat.
 
 ## HOW TO USE IT
 
@@ -431,6 +569,8 @@ initial-<fishtype>-count: initial count of the species at the start of the simul
 
 <fishtype>-reproduction-cost: once a fish sucessfully reproduced, it will consume this amount of cost on its energy.
 
+<fishtype>-maximum-age: maximum age (ticks) a fish can live. Note that at the start of the simulation, a random age is given to the fish.
+
 NOTE: <fishtype> refers to tuna or ancovy.
 
 
@@ -442,9 +582,13 @@ NOTE: <fishtype> refers to tuna or ancovy.
 
 - In the current parameters set in both fish, tuna stores and needs bigger amount of energy (for reproduction) than anchovies due to them having a bigger body.
 
+- Lifespan of a fish doesn't really affect the population count severely due to the supply and demand of food stabilizing its population (less fish, more foods to consume, therefore higher reproduction rate.).
+
 ## THINGS TO TRY
 
-- Try modifying the reproduction rate of algaes, or try altering the energy cost and needed for a fish to reproduce to see if it impacts the population of those fish.
+- Try modifying the reproduction rate of algaes, or try altering the energy cost and needed for a fish to reproduce to see if it impacts the population of those fish. 
+
+- Also try other altering parameters aside from the ones stated above in the model.
 
 ## EXTENDING THE MODEL
 
