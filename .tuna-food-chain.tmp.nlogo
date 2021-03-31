@@ -569,7 +569,7 @@ initial-<fishtype>-count: initial count of the species at the start of the simul
 
 <fishtype>-reproduction-cost: once a fish sucessfully reproduced, it will consume this amount of cost on its energy.
 
-<fishtype>-maximum-age: maximum age (ticks) a fish can live. Note that at the start of the simulation, a random age is given to the fish.
+<fishtype>-maximum-age: maximum age (ticks) a fish can live. Note that at the start of the simulation, a random age is given to the fish (Not implementing randomness at the start causes mass deaths , therefore an imbalance that causes extinction).
 
 NOTE: <fishtype> refers to tuna or ancovy.
 
@@ -582,7 +582,7 @@ NOTE: <fishtype> refers to tuna or ancovy.
 
 - In the current parameters set in both fish, tuna stores and needs bigger amount of energy (for reproduction) than anchovies due to them having a bigger body.
 
-- Lifespan of a fish doesn't really affect the population count severely due to the supply and demand of food stabilizing its population .
+- Lifespan of a fish doesn't really affect the population count severely due to the supply and demand of food stabilizing its population (less fish, more foods to consume, therefore higher reproduction rate.).
 
 ## THINGS TO TRY
 

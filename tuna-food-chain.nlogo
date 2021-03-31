@@ -569,7 +569,7 @@ initial-<fishtype>-count: initial count of the species at the start of the simul
 
 <fishtype>-reproduction-cost: once a fish sucessfully reproduced, it will consume this amount of cost on its energy.
 
-<fishtype>-maximum-age: maximum age (ticks) a fish can live. Note that at the start of the simulation, a random age is given to the fish.
+<fishtype>-maximum-age: maximum age (ticks) a fish can live. Note that at the start of the simulation, a random age is given to the fish (Not implementing randomness at the start causes mass deaths by dying at the same time, therefore an imbalance that causes extinction).
 
 NOTE: <fishtype> refers to tuna or ancovy.
 
