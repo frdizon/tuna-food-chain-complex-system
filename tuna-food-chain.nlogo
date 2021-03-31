@@ -38,7 +38,7 @@ to tuna-bahaviour
   [
     swim
     eat-anchovy
-    death
+    death-by-starvation
     reproduce-tuna
   ]
 end
@@ -48,7 +48,7 @@ to anchovy-bahaviour
   [
     swim
     eat-algae
-    death
+    death-by-starvation
     reproduce-anchovy
   ]
 end
@@ -90,13 +90,13 @@ to reproduce-tuna  ; sheep procedure
 end
 
 to reproduce-anchovy
-  if random-float 100 < anchovy-energy-need-to-reproduce [
+  if energy >= anchovy-energy-need-to-reproduce [
     set energy energy - anchovy-reproduction-cost
     hatch 1 [ rt random-float 360 fd 1 set energy anchovy-initial-energy ]
   ]
 end
 
-to death
+to death-by-starvation
   if energy < 0 [ die ]
 end
 
@@ -216,7 +216,7 @@ PLOT
 493
 497
 643
-plot 1
+Species count
 NIL
 NIL
 0.0
@@ -330,7 +330,7 @@ anchovy-energy-need-to-reproduce
 anchovy-energy-need-to-reproduce
 0
 100
-60.0
+40.0
 1
 1
 NIL
@@ -360,7 +360,7 @@ anchovy-reproduction-cost
 anchovy-reproduction-cost
 0
 100
-40.0
+20.0
 1
 1
 NIL
@@ -402,39 +402,57 @@ count patches with [pcolor = green]
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+This model simulates the ecosystem of tuna's foodchain, where tunas eat smaller fish known as anchovies, and anchovies eat floating algaes.
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+As stated earlier, this model sumulates a foodchain where a tuna eats a smaller fish known as anchovies, and anchovies eat algaes. Since both tunas and anchovies are a type of fish, they both have a similar behaviour where both can swim to move around, both can reproduce an offset of the same species, both can die from starvation, both does eat but they differ on what food to eat.
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
+In this model, there are 2 categories of species, the algae and the fish (for both tuna and anchovy).
+
+Algae:
+
+Reproduction of the algae in the model can be configured using the algae-reproduction-interval
+
+
+Fish (Tuna and Anchovy):
+
+Below are the list of its sliders and its description.
+
+initial-<fishtype>-count: initial count of the species at the start of the simulation.
+
+<fishtype>-initial-energy: initial energy of the spawned fish in the beginning, and also the initial energy offset fishes produced from reproduction.
+
+<fishtype>-energy-from-food: energy gained when consuming a food.
+
+<fishtype>-energy-need-to-reproduce: a fish needs to achieved this number of energy to be able to reproduce. Ones this energy level was reached by the fish, it is guaranteed to reproduce (100% chance).
+
+<fishtype>-reproduction-cost: once a fish sucessfully reproduced, it will consume this amount of cost on its energy.
+
+NOTE: <fishtype> refers to tuna or ancovy.
+
 
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
+- Foods really impact the amount of species in the ecosystem.
+
+- Amount of Algae impact the population count of tuna, even if tuna does not have a direct relationship on algaes.
+
+- In the current parameters set in both fish, tuna stores and needs bigger amount of energy (for reproduction) than anchovies due to them having a bigger body.
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+- Try modifying the reproduction rate of algaes, or try altering the energy cost and needed for a fish to reproduce to see if it impacts the population of those fish.
 
 ## EXTENDING THE MODEL
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
-
-## NETLOGO FEATURES
-
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+- Maybe try to add more different kinds of species for diversity.
 
 ## RELATED MODELS
 
-(models in the NetLogo Models Library and elsewhere which are of related interest)
-
-## CREDITS AND REFERENCES
-
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+This model was influeced by a model found in NetLogo's Models Library named Wolf Sheep Predation. (Can be found under Sample Models > Biology > Wolf Sheep Predation)
 @#$#@#$#@
 default
 true
